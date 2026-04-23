@@ -13,4 +13,5 @@ export class CreateUserDto {
 
     @IsEnum(UserRole)
     role!: UserRole;
+
 }

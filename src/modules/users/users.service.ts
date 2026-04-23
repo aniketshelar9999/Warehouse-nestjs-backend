@@ -13,12 +13,23 @@ export class UsersService {
         private readonly userRepo: Repository<User>,
     ) { }
 
+    //login
+    async findByEmail(email: string) {
+        return await this.userRepo.findOne({ where: { email } });
+    }
+
+    //refresh token
+    async findOne(id: number) {
+        console.log("FINDING USER WITH ID:", id);
+        return await this.userRepo.findOne({ where: { id } });
+    }
+
     async create(dto: CreateUserDto) {
         try {
 
-            const hashedPassword = await bcrypt.hash(dto.password, 10);
-            const user = this.userRepo.create({ ...dto, password: hashedPassword });
+            const user = this.userRepo.create(dto);
             return await this.userRepo.save(user);
+
         } catch (error: any) {
             if (error.code === '23505') {
                 throw new BadRequestException('Email already exists');
@@ -29,10 +40,6 @@ export class UsersService {
 
     findAll() {
         return this.userRepo.find();
-    }
-
-    findOne(id: number) {
-        return this.userRepo.findOne({ where: { id } });
     }
 
     async update(id: number, dto: UpdateUserDto) {
