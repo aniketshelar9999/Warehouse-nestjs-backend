@@ -9,6 +9,7 @@ import {
 import { AuthService } from './auth.service';
 import type { Response, Request } from 'express';
 import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
+import { RegisterDto } from './dto/register.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -19,7 +20,7 @@ export class AuthController {
     // ---------------------------
     @Post('register')
     async register(
-        @Body() dto: any,
+        @Body() dto: RegisterDto,
         @Res({ passthrough: true }) res: Response,
     ) {
         const result = await this.authService.register(dto);

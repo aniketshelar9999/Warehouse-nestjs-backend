@@ -8,6 +8,8 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import { UsersService } from '../users/users.service';
+import { RegisterDto } from './dto/register.dto';
+import { UserRole } from '../users/entities/user.entities';
 
 
 @Injectable()
@@ -21,7 +23,7 @@ export class AuthService {
     // ---------------------------
     // REGISTER
     // ---------------------------
-    async register(dto: any) {
+    async register(dto: RegisterDto) {
         const existing = await this.usersService.findByEmail(dto.email);
         if (existing) throw new ConflictException('Email already exists');
 
@@ -31,7 +33,7 @@ export class AuthService {
             name: dto.name,
             email: dto.email,
             password: hashedPassword,
-            role: dto.role,
+            role: UserRole.EMPLOYEE,
         });
 
         const tokens = await this.getTokens(user.id, user.role);
