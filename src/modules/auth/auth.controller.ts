@@ -10,6 +10,7 @@ import { AuthService } from './auth.service';
 import type { Response, Request } from 'express';
 import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
 import { RegisterDto } from './dto/register.dto';
+import { LoginDto } from './dto/login.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -38,7 +39,7 @@ export class AuthController {
     // ---------------------------
     @Post('login')
     async login(
-        @Body() dto: any,
+        @Body() dto: LoginDto,
         @Res({ passthrough: true }) res: Response,
     ) {
         const result = await this.authService.login(dto);

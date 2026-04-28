@@ -19,7 +19,7 @@ export class UsersService {
     }
 
     //refresh token
-    async findOne(id: number) {
+    async findOne(id: string) {
         console.log("FINDING USER WITH ID:", id);
         return await this.userRepo.findOne({ where: { id } });
     }
@@ -42,7 +42,7 @@ export class UsersService {
         return this.userRepo.find();
     }
 
-    async update(id: number, dto: UpdateUserDto) {
+    async update(id: string, dto: UpdateUserDto) {
         try {
             const user = await this.userRepo.findOne({ where: { id } });
 
@@ -66,7 +66,7 @@ export class UsersService {
         }
     }
 
-    remove(id: number) {
+    remove(id: string) {
         return this.userRepo.delete(id);
     }
 }

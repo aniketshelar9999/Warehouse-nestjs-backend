@@ -9,6 +9,7 @@ import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import { UsersService } from '../users/users.service';
 import { RegisterDto } from './dto/register.dto';
+import { LoginDto } from './dto/login.dto';
 import { UserRole } from '../users/entities/user.entities';
 
 
@@ -50,7 +51,7 @@ export class AuthService {
     // LOGIN
     // ---------------------------
 
-    async login(dto: any) {
+    async login(dto: LoginDto) {
         const user = await this.usersService.findByEmail(dto.email);
 
 
@@ -73,7 +74,7 @@ export class AuthService {
     // ---------------------------
     // LOGOUT
     // ---------------------------
-    async logout(userId: number) {
+    async logout(userId: string) {
         await this.usersService.update(userId, { refreshToken: null });
         return { message: 'Logged out successfully' };
     }
@@ -81,7 +82,7 @@ export class AuthService {
     // ---------------------------
     // REFRESH TOKENS
     // ---------------------------
-    async refreshTokens(userId: number, refreshToken: string) {
+    async refreshTokens(userId: string, refreshToken: string) {
         const user = await this.usersService.findOne(userId);
         if (!user || !user.refreshToken)
             throw new ForbiddenException('Access denied');
@@ -101,7 +102,7 @@ export class AuthService {
     // ---------------------------
     // GENERATE TOKENS
     // ---------------------------
-    async getTokens(userId: number, role: string) {
+    async getTokens(userId: string, role: string) {
         const payload = {
             sub: userId,
             role,
@@ -122,7 +123,7 @@ export class AuthService {
     // ---------------------------
     // HASH + SAVE REFRESH TOKEN
     // ---------------------------
-    async updateRefreshToken(userId: number, refreshToken: string) {
+    async updateRefreshToken(userId: string, refreshToken: string) {
         const hashed = await bcrypt.hash(refreshToken, 10);
         await this.usersService.update(userId, { refreshToken: hashed });
     }
