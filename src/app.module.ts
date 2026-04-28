@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { UsersModule } from './modules/users/users.module';
 import { BrandsModule } from './modules/brands/brands.module';
 import { SuppliersModule } from './modules/suppliers/suppliers.module';
+import { BrandSuppliersModule } from './modules/brand-suppliers/brand-suppliers.module';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './modules/auth/auth.module';
 
@@ -25,7 +26,7 @@ import { AuthModule } from './modules/auth/auth.module';
       synchronize: true,
     }),
     UsersModule,
-    AuthModule, BrandsModule, SuppliersModule
+    AuthModule, BrandsModule, SuppliersModule, BrandSuppliersModule
   ],
   controllers: [AppController],
   providers: [AppService],
