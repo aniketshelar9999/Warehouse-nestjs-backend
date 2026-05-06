@@ -8,6 +8,8 @@ import { SuppliersModule } from './modules/suppliers/suppliers.module';
 import { BrandSuppliersModule } from './modules/brand-suppliers/brand-suppliers.module';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './modules/auth/auth.module';
+import { CategoriesModule } from './modules/categories/categories.module';
+import { ProductsModule } from './modules/products/products.module';
 
 
 @Module({
@@ -26,7 +28,8 @@ import { AuthModule } from './modules/auth/auth.module';
       synchronize: true,
     }),
     UsersModule,
-    AuthModule, BrandsModule, SuppliersModule, BrandSuppliersModule
+    AuthModule, BrandsModule, SuppliersModule, BrandSuppliersModule, CategoriesModule,
+    ProductsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
