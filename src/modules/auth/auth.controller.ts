@@ -29,6 +29,7 @@ export class AuthController {
         this.setRefreshCookie(res, result.refreshToken);
 
         return {
+            message: `Registration successful. Please log in.`,
             user: result.user,
             accessToken: result.accessToken,
         };
@@ -40,16 +41,18 @@ export class AuthController {
     @Post('login')
     async login(
         @Body() dto: LoginDto,
-        @Res({ passthrough: true }) res: Response,
+        @Res() res: Response,
     ) {
         const result = await this.authService.login(dto);
 
         this.setRefreshCookie(res, result.refreshToken);
+        this.setAccessCookie(res, result.accessToken);
 
-        return {
+        return res.status(200).json({
+            message: "Login successful",
             user: result.user,
             accessToken: result.accessToken,
-        };
+        });
     }
 
     // ---------------------------
@@ -59,10 +62,11 @@ export class AuthController {
     @Post('refresh')
     async refresh(
         @Req() req: any,
-        @Res({ passthrough: true }) res: Response,
+        @Res() res: Response,
     ) {
         console.log("HITTING REFRESH with:", req.user);
-        const userId = req.user.id; // FIXED
+
+        const userId = req.user.id;
         const refreshToken = req.user.refreshToken;
 
         const result = await this.authService.refreshTokens(
@@ -70,12 +74,16 @@ export class AuthController {
             refreshToken,
         );
 
-        this.setRefreshCookie(res, result.refreshToken);
+        // Set cookies BEFORE sending response
+        this.setAccessCookie(res, result.accessToken);
+        // this.setRefreshCookie(res, result.refreshToken);
 
-        return {
+        return res.status(200).json({
+            message: "Tokens refreshed successfully",
             accessToken: result.accessToken,
-        };
+        });
     }
+
 
     // ---------------------------
     // LOGOUT
@@ -92,6 +100,7 @@ export class AuthController {
         }
 
         res.clearCookie('refresh_token');
+        res.clearCookie('access_token');
 
         return { message: 'Logged out' };
     }
@@ -103,8 +112,17 @@ export class AuthController {
         res.cookie('refresh_token', token, {
             httpOnly: true,
             secure: false,
-            sameSite: 'strict',
-            path: '/auth/refresh',
+            sameSite: 'lax',
+            // path: "/",
+        });
+    }
+    private setAccessCookie(res: Response, token: string) {
+        res.cookie("access_token", token, {
+            httpOnly: true,
+            secure: false,
+            sameSite: "lax",
+            // path: "/",
+
         });
     }
 }
