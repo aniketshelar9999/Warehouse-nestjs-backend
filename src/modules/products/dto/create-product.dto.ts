@@ -1,5 +1,6 @@
 import { IsNotEmpty, IsString, IsUUID, IsOptional, IsNumber, IsPositive, IsInt, IsEnum } from 'class-validator';
 import { ProductStatus } from '../enums/product-status.enum';
+import { Type } from 'class-transformer';
 
 export class CreateProductDto {
     @IsString()
@@ -23,14 +24,17 @@ export class CreateProductDto {
     @IsString()
     description?: string;
 
+    @Type(() => Number)
     @IsNumber()
     @IsPositive()
     sellingPrice!: number;
 
+    @Type(() => Number)
     @IsNumber()
     @IsPositive()
     costPrice!: number;
 
+    @Type(() => Number)
     @IsInt()
     @IsPositive()
     stock!: number;
